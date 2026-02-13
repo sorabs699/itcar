@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import hotelResort from "@/assets/hotel-resort.jpg";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 
 const hotels = [
-  { name: "ITC Maurya", location: "New Delhi", rooms: 440 },
-  { name: "ITC Grand Chola", location: "Chennai", rooms: 600 },
-  { name: "ITC Maratha", location: "Mumbai", rooms: 385 },
-  { name: "ITC Royal Bengal", location: "Kolkata", rooms: 456 },
-  { name: "ITC Rajputana", location: "Jaipur", rooms: 218 },
-  { name: "ITC Windsor", location: "Bengaluru", rooms: 240 },
+  { name: "ITC Maurya", location: "New Delhi", rooms: 440, stars: 5 },
+  { name: "ITC Grand Chola", location: "Chennai", rooms: 600, stars: 5 },
+  { name: "ITC Maratha", location: "Mumbai", rooms: 385, stars: 5 },
+  { name: "ITC Royal Bengal", location: "Kolkata", rooms: 456, stars: 5 },
+  { name: "ITC Rajputana", location: "Jaipur", rooms: 218, stars: 5 },
+  { name: "ITC Windsor", location: "Bengaluru", rooms: 240, stars: 5 },
 ];
 
 const stats = [
@@ -19,9 +19,22 @@ const stats = [
   { value: "50+", label: "Years of Legacy" },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 } as const,
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
 const HotelsSection = () => (
-  <section id="hotels" className="section-padding bg-primary">
-    <div className="max-w-6xl mx-auto">
+  <section id="hotels" className="section-padding bg-gradient-section relative overflow-hidden">
+    {/* Decorative radial glow */}
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(circle, hsl(42 70% 55%), transparent 70%)" }} />
+
+    <div className="max-w-6xl mx-auto relative">
       <SectionHeading
         subtitle="Our Portfolio"
         title="Iconic Hotels Across India"
@@ -29,51 +42,70 @@ const HotelsSection = () => (
         light
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-        {stats.map((s, i) => (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
+      >
+        {stats.map((s) => (
           <motion.div
             key={s.label}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-center py-6 border border-gold/20"
+            variants={itemVariants}
+            className="text-center py-8 premium-card-dark luxury-border"
           >
-            <p className="text-3xl md:text-4xl font-display font-bold text-gold mb-1">{s.value}</p>
-            <p className="text-xs tracking-widest uppercase text-primary-foreground/60">{s.label}</p>
+            <p className="text-3xl md:text-5xl font-display font-bold text-gradient-gold mb-2">{s.value}</p>
+            <p className="text-[10px] tracking-[0.3em] uppercase text-primary-foreground/40 font-light">{s.label}</p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Hotel cards grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {hotels.map((h, i) => (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        {hotels.map((h) => (
           <motion.div
             key={h.name}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="group relative overflow-hidden"
+            variants={itemVariants}
+            whileHover={{ y: -6 }}
+            className="group relative overflow-hidden cursor-pointer"
           >
-            <img
-              src={hotelResort}
-              alt={h.name}
-              className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-primary/60 group-hover:bg-primary/40 transition-colors duration-300" />
-            <div className="absolute bottom-0 left-0 right-0 p-5">
-              <h3 className="font-display font-semibold text-lg text-primary-foreground">{h.name}</h3>
-              <div className="flex items-center gap-1.5 text-gold text-sm mt-1">
-                <MapPin size={14} />
-                <span>{h.location}</span>
-                <span className="text-primary-foreground/50 ml-2">• {h.rooms} Rooms</span>
+            <div className="relative overflow-hidden">
+              <img
+                src={hotelResort}
+                alt={h.name}
+                className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-500" />
+
+              {/* Gold line accent */}
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent group-hover:via-gold transition-all duration-500" />
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="flex gap-0.5 mb-2">
+                {Array.from({ length: h.stars }).map((_, si) => (
+                  <Star key={si} size={10} className="text-gold fill-gold" />
+                ))}
+              </div>
+              <h3 className="font-display font-semibold text-xl text-primary-foreground mb-1 group-hover:text-gold transition-colors duration-500">
+                {h.name}
+              </h3>
+              <div className="flex items-center gap-2 text-primary-foreground/50 text-sm">
+                <MapPin size={12} className="text-gold/60" />
+                <span className="font-light">{h.location}</span>
+                <span className="text-gold/30">·</span>
+                <span className="font-light">{h.rooms} Rooms</span>
               </div>
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   </section>
 );
