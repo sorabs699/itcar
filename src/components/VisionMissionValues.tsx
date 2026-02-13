@@ -9,17 +9,35 @@ const coreValues = [
   { icon: Leaf, title: "Sustainability", desc: "Pioneering responsible luxury with LEED Platinum certified hotels." },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 } as const,
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
 const VisionMissionValues = () => (
-  <section id="about" className="section-padding bg-background">
-    <div className="max-w-6xl mx-auto">
+  <section id="about" className="section-padding bg-background relative">
+    {/* Decorative background pattern */}
+    <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, hsl(215 60% 18%) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
+
+    <div className="max-w-6xl mx-auto relative">
       <SectionHeading
         subtitle="Who We Are"
         title="Vision, Mission & Core Values"
         description="ITC Hotels is committed to creating enduring value for all stakeholders through responsible luxury."
       />
 
-      {/* Vision & Mission */}
-      <div className="grid md:grid-cols-2 gap-8 mb-16">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid md:grid-cols-2 gap-8 mb-20"
+      >
         {[
           {
             icon: Eye,
@@ -31,39 +49,46 @@ const VisionMissionValues = () => (
             label: "Our Mission",
             text: "To delight guests with world-class hospitality, create lasting value for all stakeholders, and champion environmental stewardship through innovation and sustainable practices.",
           },
-        ].map((item, i) => (
+        ].map((item) => (
           <motion.div
             key={item.label}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: i * 0.15 }}
-            className="bg-card border border-border p-8 md:p-10"
+            variants={itemVariants}
+            whileHover={{ y: -4, transition: { duration: 0.3 } }}
+            className="premium-card luxury-border-hover p-10 md:p-12"
           >
-            <item.icon className="text-gold mb-4" size={32} strokeWidth={1.5} />
-            <h3 className="text-xl font-display font-semibold text-foreground mb-3">{item.label}</h3>
-            <p className="text-muted-foreground font-light leading-relaxed">{item.text}</p>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 flex items-center justify-center border border-gold/30 bg-gold/5">
+                <item.icon className="text-gold" size={22} strokeWidth={1.5} />
+              </div>
+              <h3 className="text-xl font-display font-semibold text-foreground tracking-wide">{item.label}</h3>
+            </div>
+            <p className="text-muted-foreground font-light leading-[1.9] text-elegant text-[15px]">{item.text}</p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Core Values */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {coreValues.map((v, i) => (
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        {coreValues.map((v) => (
           <motion.div
             key={v.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="text-center p-6 bg-muted/50 border border-border hover:border-gold/40 transition-colors duration-300"
+            variants={itemVariants}
+            whileHover={{ y: -6, transition: { duration: 0.3 } }}
+            className="group text-center p-8 premium-card luxury-border-hover"
           >
-            <v.icon className="text-gold mx-auto mb-4" size={28} strokeWidth={1.5} />
-            <h4 className="font-display font-semibold text-foreground mb-2">{v.title}</h4>
-            <p className="text-sm text-muted-foreground font-light">{v.desc}</p>
+            <div className="w-14 h-14 mx-auto mb-5 flex items-center justify-center border border-gold/20 group-hover:border-gold/50 group-hover:bg-gold/5 transition-all duration-500">
+              <v.icon className="text-gold group-hover:scale-110 transition-transform duration-500" size={24} strokeWidth={1.5} />
+            </div>
+            <h4 className="font-display font-semibold text-foreground mb-3 tracking-wide">{v.title}</h4>
+            <p className="text-sm text-muted-foreground font-light leading-relaxed">{v.desc}</p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   </section>
 );
